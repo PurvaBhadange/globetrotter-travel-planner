@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Navbar } from "../components/layout/Navbar";
 import { Footer } from "../components/layout/Footer";
 import { SEASONAL_CAMPAIGNS, SeasonalCampaign, CITIES } from "../data/mockTravelData";
-import { Sun, CloudRain, Snowflake, Sparkle, ArrowRight } from "lucide-react";
+import { Sun, CloudRain, Snowflake, Sparkle, Flame, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export const Seasonal: React.FC = () => {
@@ -12,76 +12,107 @@ export const Seasonal: React.FC = () => {
   const campaign: SeasonalCampaign = SEASONAL_CAMPAIGNS[activeTab] || SEASONAL_CAMPAIGNS.monsoon;
 
   return (
-    <div className="min-h-screen bg-navy-900 text-white font-body">
+    <div className="min-h-screen bg-[#FFFDF5] text-black font-body">
       <Navbar />
 
-      <div className="relative py-20 bg-navy-900 text-white border-b border-white/10 overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <img src={campaign.heroImage} alt={campaign.title} className="w-full h-full object-cover filter brightness-50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-navy-900 via-navy-900/60 to-transparent" />
-        </div>
-
+      {/* Hero Banner Box */}
+      <div className="relative py-16 bg-[#FFD93D] text-black border-b-8 border-black overflow-hidden neo-grid-pattern">
         <div className="relative z-10 max-w-7xl mx-auto px-4 text-center">
-          <span className="text-xs font-bold text-coral-400 uppercase tracking-widest block mb-2">
-            SEASONAL TRAVEL HUB
-          </span>
-          <h1 className="font-jakarta text-4xl sm:text-6xl font-black text-white mb-4">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-black text-white font-black text-xs uppercase tracking-widest border-2 border-black shadow-[2px_2px_0px_0px_#000] mb-4">
+            <Flame className="w-3.5 h-3.5 text-[#FF6B6B]" />
+            <span>SEASONAL EXPLORER HUB</span>
+          </div>
+
+          <h1 className="font-black text-4xl sm:text-7xl text-black uppercase tracking-tighter mb-2 leading-none">
             {campaign.title}
           </h1>
-          <p className="text-lg text-slate-200 max-w-xl mx-auto mb-8 font-body">
+
+          <p className="text-sm sm:text-xl font-bold text-black/90 max-w-xl mx-auto mb-8 uppercase tracking-wide">
             "{campaign.tagline}"
           </p>
 
-          <div className="inline-flex items-center gap-2 p-1.5 bg-navy-900/80 backdrop-blur-md rounded-full border border-white/20">
+          {/* Season Selector Tabs */}
+          <div className="inline-flex flex-wrap items-center justify-center gap-2 p-2 bg-white border-4 border-black shadow-[6px_6px_0px_0px_#000]">
             <button
               onClick={() => setActiveTab("summer")}
-              className={`px-4 py-2 text-xs font-bold rounded-full transition-all ${
-                activeTab === "summer" ? "bg-sky-500 text-white shadow-md" : "text-slate-300"
+              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-black uppercase tracking-wider border-2 border-black cursor-pointer transition-all ${
+                activeTab === "summer"
+                  ? "bg-[#FF3D00] text-white shadow-[2px_2px_0px_0px_#000]"
+                  : "bg-white text-black hover:bg-[#FFD93D]"
               }`}
             >
-              Summer
+              <Sun className="w-4 h-4 stroke-[3px]" />
+              <span>SUMMER</span>
             </button>
+
             <button
               onClick={() => setActiveTab("monsoon")}
-              className={`px-4 py-2 text-xs font-bold rounded-full transition-all ${
-                activeTab === "monsoon" ? "bg-emerald-500 text-white shadow-md" : "text-slate-300"
+              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-black uppercase tracking-wider border-2 border-black cursor-pointer transition-all ${
+                activeTab === "monsoon"
+                  ? "bg-[#00E5FF] text-black shadow-[2px_2px_0px_0px_#000]"
+                  : "bg-white text-black hover:bg-[#FFD93D]"
               }`}
             >
-              Monsoon
+              <CloudRain className="w-4 h-4 stroke-[3px]" />
+              <span>MONSOON</span>
             </button>
+
             <button
               onClick={() => setActiveTab("winter")}
-              className={`px-4 py-2 text-xs font-bold rounded-full transition-all ${
-                activeTab === "winter" ? "bg-blue-400 text-white shadow-md" : "text-slate-300"
+              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-black uppercase tracking-wider border-2 border-black cursor-pointer transition-all ${
+                activeTab === "winter"
+                  ? "bg-[#00E676] text-black shadow-[2px_2px_0px_0px_#000]"
+                  : "bg-white text-black hover:bg-[#FFD93D]"
               }`}
             >
-              Winter
+              <Snowflake className="w-4 h-4 stroke-[3px]" />
+              <span>WINTER</span>
             </button>
+
             <button
               onClick={() => setActiveTab("diwali")}
-              className={`px-4 py-2 text-xs font-bold rounded-full transition-all ${
-                activeTab === "diwali" ? "bg-amber-500 text-white shadow-md" : "text-slate-300"
+              className={`flex items-center gap-1.5 px-4 py-2 text-xs font-black uppercase tracking-wider border-2 border-black cursor-pointer transition-all ${
+                activeTab === "diwali"
+                  ? "bg-[#FF2E93] text-white shadow-[2px_2px_0px_0px_#000]"
+                  : "bg-white text-black hover:bg-[#FFD93D]"
               }`}
             >
-              Diwali
+              <Sparkle className="w-4 h-4 stroke-[3px]" />
+              <span>DIWALI</span>
             </button>
           </div>
         </div>
       </div>
 
       <main className="max-w-7xl mx-auto px-4 py-16">
-        <h2 className="font-jakarta text-2xl font-bold text-white mb-6">Best Destinations This Season</h2>
+        <h2 className="font-black text-3xl uppercase tracking-tighter text-black mb-8 border-b-4 border-black pb-2">
+          BEST DESTINATIONS THIS SEASON
+        </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {CITIES.slice(0, 3).map((city) => (
-            <div key={city.id} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden p-4">
-              <img src={city.imageUrl} alt={city.name} className="w-full h-40 object-cover rounded-xl mb-3" />
-              <h3 className="font-jakarta text-lg font-bold text-white">{city.name}, {city.country}</h3>
-              <p className="text-xs text-slate-300 mt-1 mb-3">{city.description}</p>
+            <div
+              key={city.id}
+              className="bg-white border-4 border-black shadow-[8px_8px_0px_0px_#000] card-neo-lift p-5 flex flex-col justify-between"
+            >
+              <div>
+                <img
+                  src={city.imageUrl}
+                  alt={city.name}
+                  className="w-full h-44 object-cover border-3 border-black mb-4"
+                />
+                <h3 className="font-black text-2xl uppercase tracking-tight text-black">
+                  {city.name}, {city.country}
+                </h3>
+                <p className="text-xs font-bold text-black/80 mt-1 mb-4 uppercase leading-snug">
+                  {city.description}
+                </p>
+              </div>
               <button
                 onClick={() => navigate(`/trips/new?city=${city.id}`)}
-                className="w-full py-2 bg-coral-500 text-white text-xs font-bold rounded-xl"
+                className="w-full py-2.5 bg-[#FF6B6B] text-white font-black text-xs uppercase tracking-wider border-2 border-black shadow-[3px_3px_0px_0px_#000] btn-neo-push hover:bg-[#FF5722] cursor-pointer flex items-center justify-center gap-1"
               >
-                Plan {city.name} Trip
+                <span>PLAN {city.name.toUpperCase()} TRIP</span>
+                <ArrowRight className="w-4 h-4 stroke-[3px]" />
               </button>
             </div>
           ))}
