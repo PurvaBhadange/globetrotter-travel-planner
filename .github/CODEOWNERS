@@ -1,0 +1,19 @@
+# CODEOWNERS
+# Place this file at: .github/CODEOWNERS
+# GitHub will auto-request the listed owner as a reviewer whenever a PR touches these paths.
+
+# Backend zone
+/backend/                  @atharva081106
+/prisma/schema.prisma      @atharva081106
+/docs/backend.md           @atharva081106
+
+# Frontend zone
+/frontend/                 @PurvaBhadange
+/docs/frontend.md          @PurvaBhadange
+/docs/design.md            @PurvaBhadange
+
+# Shared/root files — both must review
+/README.md                 @atharva081106 @PurvaBhadange
+/docker-compose.yml        @atharva081106 @PurvaBhadange
+/package.json              @atharva081106 @PurvaBhadange
+/.github/                  @atharva081106 @PurvaBhadange
