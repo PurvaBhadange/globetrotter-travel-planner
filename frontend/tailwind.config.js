@@ -4,20 +4,38 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: "#0F6E6E",
-        accent: "#FF7A59",
-        surfaceDark: "#1B1E24",
-        bgDark: "#111318",
+        // Swiss International Palette
+        swiss: {
+          bg: "#FFFFFF",
+          fg: "#000000",
+          muted: "#F2F2F2",
+          accent: "#FF3000",
+          border: "#000000",
+        },
+        // Existing tokens mapped to Swiss theme
+        primary: "#000000",
+        accent: "#FF3000",
+        surfaceDark: "#000000",
+        bgDark: "#FFFFFF",
         surfaceLight: "#FFFFFF",
-        bgLight: "#FAFAF8",
+        bgLight: "#F2F2F2",
       },
       fontFamily: {
-        heading: ["Poppins", "sans-serif"],
+        heading: ["Inter", "sans-serif"],
         body: ["Inter", "sans-serif"],
       },
       borderRadius: {
-        card: "12px",
-        control: "8px",
+        card: "0px",
+        control: "0px",
+        DEFAULT: "0px",
+      },
+      borderWidth: {
+        3: "3px",
+        4: "4px",
+      },
+      letterSpacing: {
+        tighter: "-0.05em",
+        widest: "0.25em",
       },
     },
   },

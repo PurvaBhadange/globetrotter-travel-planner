@@ -1,10 +1,10 @@
-import React, { InputHTMLAttributes, forwardRef } from "react";
+import { InputHTMLAttributes, forwardRef, ReactNode } from "react";
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
-  leftIcon?: React.ReactNode;
-  rightIcon?: React.ReactNode;
+  leftIcon?: ReactNode;
+  rightIcon?: ReactNode;
   helperText?: string;
 }
 
@@ -22,46 +22,49 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     },
     ref
   ) => {
-    const inputId = id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
+    const inputId =
+      id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
 
     return (
-      <div className="w-full flex flex-col gap-1.5">
+      <div className="w-full flex flex-col gap-1">
         {label && (
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-gray-300 tracking-wide uppercase"
+            className="text-[10px] font-black text-black tracking-widest uppercase mb-1"
           >
             {label}
           </label>
         )}
         <div className="relative flex items-center">
           {leftIcon && (
-            <div className="absolute left-3.5 text-gray-400 pointer-events-none flex items-center justify-center">
+            <div className="absolute left-3 text-black pointer-events-none flex items-center justify-center">
               {leftIcon}
             </div>
           )}
           <input
             ref={ref}
             id={inputId}
-            className={`w-full bg-surfaceDark/80 border text-gray-100 placeholder-gray-500 text-sm rounded-control transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent/60 focus:border-accent ${
+            className={`w-full bg-white border-2 text-black placeholder-gray-400 text-sm font-medium rounded-none transition-colors duration-150 focus:outline-none focus:border-[#FF3000] focus:bg-white ${
               leftIcon ? "pl-10" : "pl-3.5"
-            } ${rightIcon ? "pr-10" : "pr-3.5"} py-2.5 ${
+            } ${rightIcon ? "pr-10" : "pr-3.5"} py-3 ${
               error
-                ? "border-red-500/80 focus:ring-red-500/50"
-                : "border-white/10 hover:border-white/20"
+                ? "border-[#FF3000] bg-red-50/20"
+                : "border-black hover:border-black/80"
             } ${className}`}
             {...props}
           />
           {rightIcon && (
-            <div className="absolute right-3.5 flex items-center justify-center">
+            <div className="absolute right-3 flex items-center justify-center">
               {rightIcon}
             </div>
           )}
         </div>
         {error ? (
-          <p className="text-xs text-red-400 font-medium animate-fadeIn">{error}</p>
+          <p className="text-[11px] text-[#FF3000] font-bold uppercase tracking-wide mt-1">
+            ■ {error}
+          </p>
         ) : helperText ? (
-          <p className="text-xs text-gray-400">{helperText}</p>
+          <p className="text-xs text-gray-600 mt-1">{helperText}</p>
         ) : null}
       </div>
     );

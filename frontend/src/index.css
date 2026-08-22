@@ -1,3 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  /* Swiss Grid Pattern (24px grid at 4% opacity) */
+  .swiss-grid-pattern {
+    background-size: 24px 24px;
+    background-image: 
+      linear-gradient(to right, rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+  }
+
+  /* Swiss Dot Matrix (16px spacing, 5% opacity) */
+  .swiss-dots {
+    background-image: radial-gradient(rgba(0, 0, 0, 0.15) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
+
+  /* Swiss Diagonal Lines */
+  .swiss-diagonal {
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(0, 0, 0, 0.05) 0,
+      rgba(0, 0, 0, 0.05) 1px,
+      transparent 0,
+      transparent 10px
+    );
+  }
+}
+
+body {
+  background-color: #ffffff;
+  color: #000000;
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Force square edges and crisp outlines globally */
+* {
+  border-radius: 0px !important;
+}

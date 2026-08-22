@@ -13,11 +13,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
       id || (label ? label.toLowerCase().replace(/\s+/g, "-") : undefined);
 
     return (
-      <div className="w-full flex flex-col gap-1.5">
+      <div className="w-full flex flex-col gap-1">
         {label && (
           <label
             htmlFor={inputId}
-            className="text-xs font-medium text-gray-300 tracking-wide uppercase"
+            className="text-[10px] font-black text-black tracking-widest uppercase mb-1"
           >
             {label}
           </label>
@@ -25,19 +25,19 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         <textarea
           ref={ref}
           id={inputId}
-          className={`w-full bg-surfaceDark/80 border text-gray-100 placeholder-gray-500 text-sm rounded-control transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent/60 focus:border-accent p-3.5 ${
+          className={`w-full bg-white border-2 text-black placeholder-gray-400 text-sm font-medium rounded-none transition-colors duration-150 focus:outline-none focus:border-swiss-accent p-3.5 ${
             error
-              ? "border-red-500/80 focus:ring-red-500/50"
-              : "border-white/10 hover:border-white/20"
+              ? "border-swiss-accent bg-red-50/20"
+              : "border-black hover:border-black/80"
           } ${className}`}
           {...props}
         />
         {error ? (
-          <p className="text-xs text-red-400 font-medium animate-fadeIn">
-            {error}
+          <p className="text-[11px] text-swiss-accent font-bold uppercase tracking-wide mt-1">
+            ■ {error}
           </p>
         ) : helperText ? (
-          <p className="text-xs text-gray-400">{helperText}</p>
+          <p className="text-xs text-gray-600 mt-1">{helperText}</p>
         ) : null}
       </div>
     );

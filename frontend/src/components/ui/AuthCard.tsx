@@ -6,6 +6,7 @@ export interface AuthCardProps {
   subtitle?: string;
   className?: string;
   showLogo?: boolean;
+  systemTag?: string;
 }
 
 export const AuthCard: React.FC<AuthCardProps> = ({
@@ -14,26 +15,41 @@ export const AuthCard: React.FC<AuthCardProps> = ({
   subtitle,
   className = "",
   showLogo = true,
+  systemTag = "SYS // AUTH.01",
 }) => {
   return (
-    <div className={`w-full max-w-md bg-surfaceDark/90 backdrop-blur-xl border border-white/10 rounded-card p-6 sm:p-8 shadow-2xl shadow-black/50 ${className}`}>
+    <div className={`w-full max-w-md bg-white border-4 border-black rounded-none p-6 sm:p-10 swiss-grid-pattern relative shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] ${className}`}>
+      {/* Top Bar System Indicator */}
+      <div className="flex items-center justify-between border-b-2 border-black pb-4 mb-8">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 bg-[#FF3000]"></div>
+          <span className="text-[10px] font-black tracking-widest uppercase text-black">
+            {systemTag}
+          </span>
+        </div>
+        <span className="text-[10px] font-mono font-bold tracking-widest text-black/60">
+          GT-1950.SWISS
+        </span>
+      </div>
+
       {showLogo && (
-        <div className="flex flex-col items-center mb-6 text-center">
-          <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-primary to-accent p-0.5 shadow-lg shadow-accent/20 mb-3 flex items-center justify-center">
-            <div className="w-full h-full bg-bgDark rounded-full flex items-center justify-center text-accent">
-              <span className="text-2xl font-bold font-heading">GT</span>
-            </div>
+        <div className="flex flex-col items-start mb-8">
+          <div className="w-12 h-12 bg-black text-white flex items-center justify-center font-black font-heading text-lg mb-4 rounded-none border border-black hover:bg-[#FF3000] transition-colors">
+            GT
           </div>
           {title && (
-            <h1 className="text-2xl font-bold font-heading text-white tracking-tight">
+            <h1 className="text-3xl font-black uppercase tracking-tighter text-black leading-none mb-2">
               {title}
             </h1>
           )}
           {subtitle && (
-            <p className="text-sm text-gray-400 mt-1 font-body">{subtitle}</p>
+            <p className="text-xs text-black/70 font-medium tracking-wide">
+              {subtitle}
+            </p>
           )}
         </div>
       )}
+
       {children}
     </div>
   );
