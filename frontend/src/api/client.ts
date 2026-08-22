@@ -1,6 +1,6 @@
 // Centralized API Client for GlobeTrotter Frontend
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "https://globetrotter-backend.onrender.com/api";
 
 export interface ApiResponse<T> {
   data?: T;

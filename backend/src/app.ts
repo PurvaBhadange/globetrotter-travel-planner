@@ -18,7 +18,13 @@ dotenv.config();
 const app = express();
 const httpServer = createServer(app);
 
-app.use(cors({ origin: process.env.CORS_ORIGIN || "*" }));
+const allowedOrigins = [
+  process.env.CORS_ORIGIN,
+  "https://frontend-sand-three-52.vercel.app",
+  "http://localhost:5173"
+].filter(Boolean);
+
+app.use(cors({ origin: allowedOrigins.length > 0 ? allowedOrigins : "*" }));
 app.use(express.json());
 
 app.get("/api/health", (_req, res) => {
