@@ -22,15 +22,15 @@ export const SeasonalHero: React.FC<{ onOpenBuildTripModal?: () => void }> = ({
   };
 
   return (
-    <div className="relative min-h-[620px] lg:min-h-[700px] flex items-center justify-center overflow-hidden bg-[#FFFDF5] text-black py-12 border-b-8 border-black">
-      {/* Background Graphic Box */}
-      <div className="absolute inset-0 z-0 opacity-45 pointer-events-none">
+    <div className="relative min-h-[620px] lg:min-h-[700px] flex items-center justify-center overflow-hidden bg-black text-black py-12 border-b-8 border-black">
+      {/* Full Prominent Background Photo */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
         <img
           src={campaign.heroImage}
           alt={campaign.title}
-          className="w-full h-full object-cover filter brightness-90 saturate-125 transition-all duration-500 scale-105"
+          className="w-full h-full object-cover filter brightness-95 saturate-125 transition-all duration-700 scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#FFFDF5] via-[#FFFDF5]/40 to-transparent" />
+        <div className="absolute inset-0 bg-black/15" />
       </div>
 
       {/* Main Container */}
@@ -100,15 +100,19 @@ export const SeasonalHero: React.FC<{ onOpenBuildTripModal?: () => void }> = ({
 
         {/* Main Neo-Brutalist Display Headline */}
         <h1 className="font-black text-5xl sm:text-7xl lg:text-8xl tracking-tighter text-black mb-4 uppercase leading-[0.9]">
-          {campaign.tagline.split(" ")[0]}{" "}
-          <span className="bg-[#FFD93D] text-black px-2 border-4 border-black inline-block shadow-[4px_4px_0px_0px_#000] rotate-[1deg]">
+          <span className="bg-white text-black px-3 py-1 border-4 border-black inline-block shadow-[4px_4px_0px_0px_#000] rotate-[-1deg] mb-2 sm:mb-0">
+            {campaign.tagline.split(" ")[0]}
+          </span>{" "}
+          <span className="bg-[#FFD93D] text-black px-3 py-1 border-4 border-black inline-block shadow-[4px_4px_0px_0px_#000] rotate-[1deg]">
             {campaign.tagline.split(" ").slice(1).join(" ")}
           </span>
         </h1>
 
-        <p className="text-base sm:text-xl font-bold text-black/80 max-w-2xl mx-auto mb-8 uppercase tracking-wide leading-snug">
-          Discover handpicked destinations, build day-by-day itineraries, collaborate live with your squad, and travel your way.
-        </p>
+        <div className="mb-8">
+          <p className="bg-white text-black font-extrabold text-xs sm:text-sm uppercase tracking-wider leading-snug px-4 py-2 border-3 border-black shadow-[4px_4px_0px_0px_#000] inline-block max-w-2xl">
+            DISCOVER HANDPICKED DESTINATIONS, BUILD DAY-BY-DAY ITINERARIES, COLLABORATE LIVE WITH YOUR SQUAD, AND TRAVEL YOUR WAY.
+          </p>
+        </div>
 
         {/* Neo-Brutalist Search Form Box */}
         <form
