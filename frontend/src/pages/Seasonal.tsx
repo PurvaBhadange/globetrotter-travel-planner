@@ -17,6 +17,16 @@ export const Seasonal: React.FC = () => {
 
       {/* Hero Banner Box */}
       <div className="relative py-16 bg-[#FFD93D] text-black border-b-8 border-black overflow-hidden">
+        {/* Prominent Seasonal Background Image */}
+        <div className="absolute inset-0 z-0 opacity-40 pointer-events-none">
+          <img
+            src={campaign.heroImage}
+            alt={campaign.title}
+            className="w-full h-full object-cover filter brightness-90 saturate-125 transition-all duration-500 scale-105"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#FFD93D] via-[#FFD93D]/50 to-transparent" />
+        </div>
+
         <div className="relative z-10 max-w-7xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-black text-white font-black text-xs uppercase tracking-widest border-2 border-black shadow-[2px_2px_0px_0px_#000] mb-4">
             <Flame className="w-3.5 h-3.5 text-[#FF6B6B]" />

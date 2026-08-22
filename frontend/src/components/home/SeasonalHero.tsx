@@ -24,12 +24,13 @@ export const SeasonalHero: React.FC<{ onOpenBuildTripModal?: () => void }> = ({
   return (
     <div className="relative min-h-[620px] lg:min-h-[700px] flex items-center justify-center overflow-hidden bg-[#FFFDF5] text-black py-12 border-b-8 border-black">
       {/* Background Graphic Box */}
-      <div className="absolute inset-0 z-0 opacity-15 pointer-events-none">
+      <div className="absolute inset-0 z-0 opacity-45 pointer-events-none">
         <img
           src={campaign.heroImage}
           alt={campaign.title}
-          className="w-full h-full object-cover filter grayscale contrast-200"
+          className="w-full h-full object-cover filter brightness-90 saturate-125 transition-all duration-500 scale-105"
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#FFFDF5] via-[#FFFDF5]/40 to-transparent" />
       </div>
 
       {/* Main Container */}
