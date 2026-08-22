@@ -40,6 +40,6 @@ const PORT = process.env.PORT || 4000;
 
 initSockets(httpServer);
 
-httpServer.listen(PORT, () => {
-  console.log(`GlobeTrotter API listening on port ${PORT}`);
+httpServer.listen(4000, () => {
+  console.log("GlobeTrotter API listening on port 4000");
 });
