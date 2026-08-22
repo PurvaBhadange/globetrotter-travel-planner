@@ -114,7 +114,7 @@ export const Home: React.FC = () => {
       </section>
 
       {/* Top Destinations Cards */}
-      <section className="py-16 bg-[#FFFDF5] border-y-8 border-black neo-grid-pattern">
+      <section className="py-16 bg-[#FFFDF5] border-y-8 border-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-4 mb-10">
             <div>

@@ -11,16 +11,15 @@
   }
 }
 
-/* Neo-brutalism Halftone Dots & Grid Overlay */
+/* Neo-brutalism Halftone Dots */
 .neo-halftone {
   background-image: radial-gradient(#000000 1.5px, transparent 1.5px);
   background-size: 20px 20px;
 }
 
+/* Clean background pattern utility */
 .neo-grid-pattern {
-  background-size: 40px 40px;
-  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-                    linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-color: var(--neo-bg, #FFFDF5);
 }
 
 /* Hard Shadows for Neo-brutalism */

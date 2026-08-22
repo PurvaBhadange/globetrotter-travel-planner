@@ -22,7 +22,7 @@ export const SeasonalHero: React.FC<{ onOpenBuildTripModal?: () => void }> = ({
   };
 
   return (
-    <div className="relative min-h-[620px] lg:min-h-[700px] flex items-center justify-center overflow-hidden bg-[#FFFDF5] text-black py-12 border-b-8 border-black neo-grid-pattern">
+    <div className="relative min-h-[620px] lg:min-h-[700px] flex items-center justify-center overflow-hidden bg-[#FFFDF5] text-black py-12 border-b-8 border-black">
       {/* Background Graphic Box */}
       <div className="absolute inset-0 z-0 opacity-15 pointer-events-none">
         <img

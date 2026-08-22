@@ -16,7 +16,7 @@ export const Seasonal: React.FC = () => {
       <Navbar />
 
       {/* Hero Banner Box */}
-      <div className="relative py-16 bg-[#FFD93D] text-black border-b-8 border-black overflow-hidden neo-grid-pattern">
+      <div className="relative py-16 bg-[#FFD93D] text-black border-b-8 border-black overflow-hidden">
         <div className="relative z-10 max-w-7xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-black text-white font-black text-xs uppercase tracking-widest border-2 border-black shadow-[2px_2px_0px_0px_#000] mb-4">
             <Flame className="w-3.5 h-3.5 text-[#FF6B6B]" />
