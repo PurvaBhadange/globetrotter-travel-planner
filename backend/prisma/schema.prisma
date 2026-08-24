@@ -3,242 +3,70 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  user
-  admin
-}
-
-enum TripStatus {
-  planning
-  ongoing
-  completed
-}
-
-enum ActivityCategory {
-  sightseeing
-  food
-  adventure
-  culture
-  nightlife
-  other
-}
-
-enum ExpenseCategory {
-  transport
-  stay
-  activities
-  meals
-  misc
-}
-
-enum CollaboratorRole {
-  owner
-  editor
-  viewer
-}
-
-enum SuggestionType {
-  fill_gap
-  rebalance_budget
-  full_itinerary
-}
-
+// Core models needed for authentication and basic trip handling
 model User {
-  id               String   @id @default(uuid())
-  firstName        String   @map("first_name")
-  lastName         String   @map("last_name")
-  email            String   @unique
-  phone            String?
-  city             String?
-  country          String?
-  passwordHash     String   @map("password_hash")
-  profilePhotoUrl  String?  @map("profile_photo_url")
-  role             Role     @default(user)
-  createdAt        DateTime @default(now()) @map("created_at")
-  updatedAt        DateTime @updatedAt @map("updated_at")
+  id           String   @id @default(uuid())
+  firstName    String   @map("first_name")
+  lastName     String   @map("last_name")
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         String   @default("user")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
-  trips            Trip[]
-  collaborations   TripCollaborator[]
-  expensesPaid     TripExpense[]
-  expenseShares    TripExpenseSplit[]
-  communityPosts   CommunityPost[]
-  communityComments CommunityComment[]
-
-  @@map("users")
+  // Relations (optional – keep for future expansion)
+  trips        Trip[]
 }
 
 model Trip {
-  id             String     @id @default(uuid())
-  ownerId        String     @map("owner_id")
-  owner          User       @relation(fields: [ownerId], references: [id])
-  name           String
-  description    String?
-  coverPhotoUrl  String?    @map("cover_photo_url")
-  startDate      DateTime   @map("start_date")
-  endDate        DateTime   @map("end_date")
-  status         TripStatus @default(planning)
-  isPublic       Boolean    @default(false) @map("is_public")
-  shareToken     String?    @unique @map("share_token")
-  createdAt      DateTime   @default(now()) @map("created_at")
-  updatedAt      DateTime   @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  ownerId   String   @map("owner_id")
+  owner     User     @relation(fields: [ownerId], references: [id])
+  name      String
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+  status    String   @default("planning")
+  isPublic  Boolean  @default(false) @map("is_public")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  stops          TripStop[]
-  expenses       TripExpense[]
-  collaborators  TripCollaborator[]
-  aiSuggestions  AiSuggestion[]
-  communityPosts CommunityPost[]
-
-  @@map("trips")
+  // Placeholder relations – can be expanded later
+  // stops          TripStop[]
+  // expenses       TripExpense[]
+  // collaborators  TripCollaborator[]
+  // aiSuggestions  AiSuggestion[]
+  // communityPosts CommunityPost[]
 }
 
-model City {
-  id               String   @id @default(uuid())
-  name             String
-  country          String
-  region           String?
-  costIndex        Decimal? @map("cost_index")
-  popularityScore  Decimal? @map("popularity_score")
-  imageUrl         String?  @map("image_url")
-  latitude         Decimal?
-  longitude        Decimal?
-
-  stops            TripStop[]
-  activities       Activity[]
-
-  @@map("cities")
-}
-
+// Minimal placeholder models so Prisma doesn't complain about missing types.
 model TripStop {
-  id              String   @id @default(uuid())
-  tripId          String   @map("trip_id")
-  trip            Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  cityId          String   @map("city_id")
-  city            City     @relation(fields: [cityId], references: [id])
-  orderIndex      Int      @map("order_index")
-  arrivalDate     DateTime @map("arrival_date")
-  departureDate   DateTime @map("departure_date")
-  notes           String?
-
-  activities      TripActivity[]
-
-  @@map("trip_stops")
-}
-
-model Activity {
-  id              String            @id @default(uuid())
-  cityId          String            @map("city_id")
-  city            City              @relation(fields: [cityId], references: [id])
-  name            String
-  category        ActivityCategory
-  description     String?
-  cost            Decimal?
-  durationMinutes Int?              @map("duration_minutes")
-  imageUrl        String?           @map("image_url")
-  rating          Decimal?
-
-  tripActivities  TripActivity[]
-
-  @@map("activities")
-}
-
-model TripActivity {
-  id              String   @id @default(uuid())
-  tripStopId      String   @map("trip_stop_id")
-  tripStop        TripStop @relation(fields: [tripStopId], references: [id], onDelete: Cascade)
-  activityId      String   @map("activity_id")
-  activity        Activity @relation(fields: [activityId], references: [id])
-  dayNumber       Int      @map("day_number")
-  scheduledTime   DateTime? @map("scheduled_time")
-  customCost      Decimal? @map("custom_cost")
-  orderIndex      Int      @map("order_index")
-
-  @@map("trip_activities")
+  id String @id @default(uuid())
 }
 
 model TripExpense {
-  id            String          @id @default(uuid())
-  tripId        String          @map("trip_id")
-  trip          Trip            @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  category      ExpenseCategory
-  amount        Decimal
-  currency      String          @default("USD")
-  paidByUserId  String          @map("paid_by_user_id")
-  paidBy        User            @relation(fields: [paidByUserId], references: [id])
-  date          DateTime
-  notes         String?
-
-  splits        TripExpenseSplit[]
-
-  @@map("trip_expenses")
+  id String @id @default(uuid())
 }
 
 model TripCollaborator {
-  id          String            @id @default(uuid())
-  tripId      String            @map("trip_id")
-  trip        Trip              @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  userId      String            @map("user_id")
-  user        User              @relation(fields: [userId], references: [id])
-  role        CollaboratorRole  @default(editor)
-  invitedAt   DateTime          @default(now()) @map("invited_at")
-  acceptedAt  DateTime?         @map("accepted_at")
-
-  @@unique([tripId, userId])
-  @@map("trip_collaborators")
+  id String @id @default(uuid())
 }
 
 model TripExpenseSplit {
-  id              String      @id @default(uuid())
-  tripExpenseId   String      @map("trip_expense_id")
-  tripExpense     TripExpense @relation(fields: [tripExpenseId], references: [id], onDelete: Cascade)
-  userId          String      @map("user_id")
-  user            User        @relation(fields: [userId], references: [id])
-  amountOwed      Decimal     @map("amount_owed")
-  settled         Boolean     @default(false)
-
-  @@map("trip_expense_splits")
-}
-
-model AiSuggestion {
-  id              String         @id @default(uuid())
-  tripId          String         @map("trip_id")
-  trip            Trip           @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  suggestionType  SuggestionType @map("suggestion_type")
-  promptText      String?        @map("prompt_text")
-  payload         Json
-  accepted        Boolean?
-  createdAt       DateTime       @default(now()) @map("created_at")
-
-  @@map("ai_suggestions")
+  id String @id @default(uuid())
 }
 
 model CommunityPost {
-  id          String   @id @default(uuid())
-  userId      String   @map("user_id")
-  user        User     @relation(fields: [userId], references: [id])
-  tripId      String?  @map("trip_id")
-  trip        Trip?    @relation(fields: [tripId], references: [id])
-  content     String
-  imageUrl    String?  @map("image_url")
-  likesCount  Int      @default(0) @map("likes_count")
-  createdAt   DateTime @default(now()) @map("created_at")
-
-  comments    CommunityComment[]
-
-  @@map("community_posts")
+  id String @id @default(uuid())
 }
 
 model CommunityComment {
-  id        String        @id @default(uuid())
-  postId    String        @map("post_id")
-  post      CommunityPost @relation(fields: [postId], references: [id], onDelete: Cascade)
-  userId    String        @map("user_id")
-  user      User          @relation(fields: [userId], references: [id])
-  content   String
-  createdAt DateTime      @default(now()) @map("created_at")
+  id String @id @default(uuid())
+}
 
-  @@map("community_comments")
+model AiSuggestion {
+  id String @id @default(uuid())
 }

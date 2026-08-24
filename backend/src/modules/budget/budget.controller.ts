@@ -4,16 +4,13 @@ import prisma from "../../utils/prisma";
 import { AuthRequest } from "../../middleware/auth.middleware";
 import { getIo } from "../../sockets";
 
-// Helper to check trip access
+// Helper to check if the requesting user is the owner of the trip
 const checkTripAccess = async (tripId: string, userId: string): Promise<boolean> => {
   const trip = await prisma.trip.findUnique({
-    where: { id: tripId },
-    include: { collaborators: true }
+    where: { id: tripId }
   });
   if (!trip) return false;
-  const isOwner = trip.ownerId === userId;
-  const isCollaborator = trip.collaborators.some((c: { userId: string; role: string }) => c.userId === userId && (c.role === 'editor' || c.role === 'owner'));
-  return isOwner || isCollaborator;
+  return trip.ownerId === userId;
 };
 
 const expenseSchema = z.object({

@@ -5,10 +5,14 @@ import {
   fillGap,
   rebalanceBudget,
   acceptSuggestion,
-  rejectSuggestion
+  rejectSuggestion,
+  generateTripFromPrompt
 } from "./copilot.controller";
 
 const router = Router();
+
+// Public route for landing page copilot search
+router.post("/copilot/generate-trip", generateTripFromPrompt);
 
 router.use(requireAuth);
 

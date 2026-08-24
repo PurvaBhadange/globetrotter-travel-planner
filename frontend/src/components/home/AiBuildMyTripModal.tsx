@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Sparkles, X, Send, Check, RefreshCw, MapPin, Calendar, DollarSign, Clock, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { apiFetch } from "../../api/client";
 
 export const AiBuildMyTripModal: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
   isOpen,
@@ -20,25 +21,29 @@ export const AiBuildMyTripModal: React.FC<{ isOpen: boolean; onClose: () => void
 
   if (!isOpen) return null;
 
-  const handleGenerate = (e: React.FormEvent) => {
+  const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
     setIsGenerating(true);
-    setTimeout(() => {
-      setIsGenerating(false);
-      setGeneratedTrip({
-        title: "Goa & Gokarna Coastal Expedition",
-        route: ["Pune", "North Goa", "Gokarna"],
-        days: 7,
-        budget: "₹42,500",
-        highlights: [
-          "Day 1–3: Baga Beach sunset catamaran & watersports",
-          "Day 4–5: Dudhsagar Falls jungle trek & spice plantation lunch",
-          "Day 6–7: Kudle Beach cliffwalk & temple beach camping",
-        ],
+    try {
+      const data = await apiFetch<{
+        title: string;
+        route: string[];
+        days: number;
+        budget: string;
+        highlights: string[];
+      }>("/copilot/generate-trip", {
+        method: "POST",
+        body: JSON.stringify({ prompt })
       });
-    }, 1200);
+      setGeneratedTrip(data);
+    } catch (err: any) {
+      console.error("AI Generation failed:", err);
+      alert("AI Generation failed: " + err.message);
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleAccept = () => {

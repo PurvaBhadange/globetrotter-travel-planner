@@ -12,7 +12,7 @@ export const ThemeSwitcher: React.FC = () => {
   return (
     <aside
       aria-label="Automatic Monthly Theme Selector"
-      className="fixed top-4 right-4 z-50 flex flex-col items-end gap-1"
+      className="fixed bottom-6 right-6 z-50 flex flex-col-reverse items-end gap-2"
     >
       {/* Main Pill Bar */}
       <div className="flex items-center gap-2 p-1.5 bg-[#FFD93D] text-black border-3 border-black shadow-[4px_4px_0px_0px_#000]">
@@ -51,7 +51,7 @@ export const ThemeSwitcher: React.FC = () => {
 
       {/* Expanded Month Picker Grid (Neo-Brutalist Popover) */}
       {isOpen && (
-        <div className="w-80 p-3 bg-white border-3 border-black shadow-[6px_6px_0px_0px_#000] animate-fadeIn mt-1 text-black">
+        <div className="w-80 p-3 bg-white border-3 border-black shadow-[6px_6px_0px_0px_#000] animate-fadeIn text-black">
           <div className="flex items-center justify-between pb-2 mb-2 border-b-2 border-black">
             <div className="flex items-center gap-1 text-xs font-black uppercase tracking-wider text-black">
               <Sparkles className="w-4 h-4 text-[#FF3D00]" />

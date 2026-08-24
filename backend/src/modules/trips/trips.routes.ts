@@ -7,7 +7,13 @@ import {
   updateTrip,
   deleteTrip,
   getSharedTrip,
+  getTripSummary
 } from "./trips.controller";
+import {
+  inviteCollaborator,
+  acceptInvite,
+  getCollaborators
+} from "../squadSync/squadSync.controller";
 
 const router = Router();
 
@@ -20,5 +26,13 @@ router.post("/", createTrip);
 router.get("/:id", getTrip);
 router.patch("/:id", updateTrip);
 router.delete("/:id", deleteTrip);
+
+// Collaborator management
+router.post("/:id/collaborators/invite", inviteCollaborator);
+router.post("/:id/collaborators/accept", acceptInvite);
+router.get("/:id/collaborators", getCollaborators);
+
+// Trip summary
+router.get("/:id/summary", getTripSummary);
 
 export default router;

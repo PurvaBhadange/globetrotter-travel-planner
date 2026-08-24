@@ -2,7 +2,7 @@ import React, { useState, ChangeEvent } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   User,
   Mail,
@@ -14,7 +14,9 @@ import {
   Plus,
   Camera,
   CheckCircle2,
+  Lock,
 } from "lucide-react";
+import { apiFetch, setAuthToken } from "../api/client";
 import { AuthCard } from "../components/ui/AuthCard";
 import { Input } from "../components/ui/Input";
 import { Textarea } from "../components/ui/Textarea";
@@ -41,6 +43,10 @@ const registerSchema = z.object({
     .regex(/^[+]*[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/, {
       message: "Invalid phone number format",
     }),
+  password: z
+    .string()
+    .min(1, { message: "Password is required" })
+    .min(6, { message: "Password must be at least 6 characters" }),
   city: z.string().min(1, { message: "City is required" }),
   country: z.string().min(1, { message: "Country is required" }),
   additionalInfo: z.string().optional(),
@@ -49,6 +55,7 @@ const registerSchema = z.object({
 export type RegisterFormData = z.infer<typeof registerSchema>;
 
 export const Register: React.FC = () => {
+  const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const { theme } = useThemeStore();
@@ -64,6 +71,7 @@ export const Register: React.FC = () => {
       lastName: "",
       email: "",
       phone: "",
+      password: "",
       city: "",
       country: "",
       additionalInfo: "",
@@ -83,15 +91,30 @@ export const Register: React.FC = () => {
 
   const onSubmit = async (data: RegisterFormData) => {
     setIsSubmitting(true);
-    const payload = {
-      ...data,
-      profilePhoto: photoPreview ? "data:image/..." : null,
-    };
-    console.log(`[${theme.toUpperCase()} AUTH] Register Submitted:`, payload);
-
-    setTimeout(() => {
+    console.log(`[${theme.toUpperCase()} AUTH] Register Submitted:`, data);
+    try {
+      const res = await apiFetch<{ accessToken: string; refreshToken?: string }>("/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          password: data.password
+        })
+      });
+      if (res.accessToken) {
+        setAuthToken(res.accessToken);
+        if (res.refreshToken) {
+          localStorage.setItem("gt-refresh-token", res.refreshToken);
+        }
+        navigate("/");
+      }
+    } catch (err: any) {
+      console.error("Registration failed:", err);
+      alert("Registration failed: " + err.message);
+    } finally {
       setIsSubmitting(false);
-    }, 800);
+    }
   };
 
   const getContainerBg = () => {
@@ -263,6 +286,15 @@ export const Register: React.FC = () => {
               {...register("phone")}
             />
           </div>
+
+          <Input
+            label="PASSWORD"
+            type="password"
+            placeholder="••••••••"
+            leftIcon={<Lock className={`w-4 h-4 ${theme === "travel-tech" ? "text-gray-400" : "text-black"}`} />}
+            error={errors.password?.message}
+            {...register("password")}
+          />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Input

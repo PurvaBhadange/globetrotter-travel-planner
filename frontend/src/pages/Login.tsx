@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { User, Lock, Eye, EyeOff, ArrowRight, Compass, Flame } from "lucide-react";
+import { apiFetch, setAuthToken } from "../api/client";
 import { AuthCard } from "../components/ui/AuthCard";
 import { Input } from "../components/ui/Input";
 import { Button } from "../components/ui/Button";
@@ -24,6 +25,7 @@ const loginSchema = z.object({
 export type LoginFormData = z.infer<typeof loginSchema>;
 
 export const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { theme } = useThemeStore();
@@ -43,10 +45,27 @@ export const Login: React.FC = () => {
   const onSubmit = async (data: LoginFormData) => {
     setIsSubmitting(true);
     console.log(`[${theme.toUpperCase()} AUTH] Login Submitted:`, data);
-
-    setTimeout(() => {
+    try {
+      const res = await apiFetch<{ accessToken: string; refreshToken?: string }>("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email: data.username,
+          password: data.password
+        })
+      });
+      if (res.accessToken) {
+        setAuthToken(res.accessToken);
+        if (res.refreshToken) {
+          localStorage.setItem("gt-refresh-token", res.refreshToken);
+        }
+        navigate("/");
+      }
+    } catch (err: any) {
+      console.error("Login failed:", err);
+      alert("Login failed: " + err.message);
+    } finally {
       setIsSubmitting(false);
-    }, 800);
+    }
   };
 
   const getContainerBg = () => {

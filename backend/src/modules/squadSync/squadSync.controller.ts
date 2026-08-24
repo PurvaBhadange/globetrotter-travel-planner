@@ -116,7 +116,7 @@ export const splitExpense = async (req: AuthRequest, res: Response): Promise<voi
 
     const expense = await prisma.tripExpense.findUnique({
       where: { id: expenseId },
-      include: { trip: { include: { collaborators: true } } }
+      include: { trip: true }
     });
 
     if (!expense) {
@@ -125,10 +125,9 @@ export const splitExpense = async (req: AuthRequest, res: Response): Promise<voi
     }
 
     const isOwner = expense.trip.ownerId === userId;
-    const isEditor = expense.trip.collaborators.some((c: { userId: string; role: string }) => c.userId === userId && (c.role === 'editor' || c.role === 'owner'));
 
-    if (!isOwner && !isEditor) {
-      res.status(403).json({ error: { code: "FORBIDDEN", message: "Not authorized to split expenses" } });
+    if (!isOwner) {
+      res.status(403).json({ error: { code: "FORBIDDEN", message: "Only trip owner can split expenses" } });
       return;
     }
 

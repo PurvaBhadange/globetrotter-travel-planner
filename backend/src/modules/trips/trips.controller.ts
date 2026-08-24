@@ -52,12 +52,7 @@ export const getTrips = async (req: AuthRequest, res: Response): Promise<void> =
     
     // Get trips where user is owner or collaborator
     const trips = await prisma.trip.findMany({
-      where: {
-        OR: [
-          { ownerId: userId },
-          { collaborators: { some: { userId } } }
-        ]
-      },
+      where: { ownerId: userId },
       include: {
         owner: { select: { id: true, firstName: true, lastName: true } },
       },
@@ -88,9 +83,6 @@ export const getTrip = async (req: AuthRequest, res: Response): Promise<void> =>
       where: { id },
       include: {
         owner: { select: { id: true, firstName: true, lastName: true, email: true } },
-        collaborators: {
-          include: { user: { select: { id: true, firstName: true, lastName: true, email: true } } }
-        },
         stops: {
           include: { city: true },
           orderBy: { orderIndex: 'asc' },
@@ -104,13 +96,11 @@ export const getTrip = async (req: AuthRequest, res: Response): Promise<void> =>
     }
 
     // Authorization check
-    const isOwner = trip.ownerId === userId;
-    const isCollaborator = trip.collaborators.some((c: { userId: string }) => c.userId === userId);
-    
-    if (!isOwner && !isCollaborator) {
-      res.status(403).json({ error: { code: "FORBIDDEN", message: "You don't have access to this trip" } });
-      return;
-    }
+      const isOwner = trip.ownerId === userId;
+      if (!isOwner) {
+        res.status(403).json({ error: { code: "FORBIDDEN", message: "You don't have access to this trip" } });
+        return;
+      }
 
     res.json(trip);
   } catch (error) {
@@ -126,8 +116,7 @@ export const updateTrip = async (req: AuthRequest, res: Response): Promise<void>
     const data = updateTripSchema.parse(req.body);
 
     const trip = await prisma.trip.findUnique({
-      where: { id },
-      include: { collaborators: true }
+      where: { id }
     });
 
     if (!trip) {
@@ -135,10 +124,8 @@ export const updateTrip = async (req: AuthRequest, res: Response): Promise<void>
       return;
     }
 
-    const isOwner = trip.ownerId === userId;
-    const isEditor = trip.collaborators.some((c: { userId: string; role: string }) => c.userId === userId && (c.role === 'editor' || c.role === 'owner'));
-
-    if (!isOwner && !isEditor) {
+      const isOwner = trip.ownerId === userId;
+      if (!isOwner) {
       res.status(403).json({ error: { code: "FORBIDDEN", message: "Only owners or editors can update the trip" } });
       return;
     }
@@ -221,6 +208,58 @@ export const getSharedTrip = async (req: AuthRequest, res: Response): Promise<vo
     res.json(trip);
   } catch (error) {
     console.error("Error getting shared trip:", error);
+    res.status(500).json({ error: { code: "INTERNAL_SERVER_ERROR", message: "Something went wrong" } });
+  }
+};
+
+export const getTripSummary = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const userId = req.userId!;
+
+    // Verify ownership
+    const trip = await prisma.trip.findUnique({ where: { id }, include: { owner: true } });
+    if (!trip) {
+      res.status(404).json({ error: { code: "NOT_FOUND", message: "Trip not found" } });
+      return;
+    }
+    if (trip.ownerId !== userId) {
+      res.status(403).json({ error: { code: "FORBIDDEN", message: "You don't have access to this trip" } });
+      return;
+    }
+
+    // Budget aggregation (reuse logic from budget controller)
+    const expenses = await prisma.tripExpense.findMany({ where: { tripId: id }, orderBy: { date: 'asc' } });
+    const breakdown: Record<string, number> = { transport: 0, stay: 0, activities: 0, meals: 0, misc: 0 };
+    let total = 0;
+    expenses.forEach((exp: any) => {
+      const amt = Number(exp.amount);
+      breakdown[exp.category] += amt;
+      total += amt;
+    });
+    const tripDays = trip && trip.endDate && trip.startDate
+      ? Math.max(1, Math.ceil((trip.endDate.getTime() - trip.startDate.getTime()) / (1000 * 3600 * 24)))
+      : 1;
+    const budget = {
+      total,
+      perDayAvg: Number((total / tripDays).toFixed(2)),
+      breakdown,
+      expenses,
+    };
+
+    // Activities linked to the trip
+    const activities = await prisma.activity.findMany({ where: { tripId: id } });
+
+    // Stops with city information
+    const stops = await prisma.tripStop.findMany({
+      where: { tripId: id },
+      include: { city: true },
+      orderBy: { orderIndex: 'asc' },
+    });
+
+    res.json({ trip, budget, activities, stops });
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: { code: "INTERNAL_SERVER_ERROR", message: "Something went wrong" } });
   }
 };

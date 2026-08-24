@@ -22,7 +22,7 @@ const allowedOrigins = [
   process.env.CORS_ORIGIN,
   "https://frontend-sand-three-52.vercel.app",
   "http://localhost:5173"
-].filter(Boolean);
+].filter(Boolean) as string[];
 
 app.use(cors({ origin: allowedOrigins.length > 0 ? allowedOrigins : "*" }));
 app.use(express.json());
@@ -31,21 +31,20 @@ app.get("/api/health", (_req, res) => {
   res.json({ status: "ok" });
 });
 
-// TODO: mount routers here as modules are built
 app.use("/api/auth", authRouter);
+app.use("/api", copilotRouter);
 app.use("/api/trips", tripsRouter);
-app.use("/api", stopsRouter); // mounts /api/trips/:id/stops and /api/stops...
+app.use("/api", stopsRouter);
 app.use("/api/cities", citiesRouter);
 app.use("/api/activities", activitiesRouter);
-app.use("/api", budgetRouter); // mounts /api/trips/:id/budget and /api/expenses...
+app.use("/api", budgetRouter);
 app.use("/api", squadSyncRouter);
-app.use("/api", copilotRouter);
 app.use("/api/community", communityRouter);
 
 const PORT = process.env.PORT || 4000;
 
 initSockets(httpServer);
 
-httpServer.listen(4000, () => {
-  console.log("GlobeTrotter API listening on port 4000");
+httpServer.listen(PORT, () => {
+  console.log(`GlobeTrotter API listening on port ${PORT}`);
 });
